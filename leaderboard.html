@@ -1,0 +1,538 @@
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;link
+      rel=&quot;icon&quot;
+      href=&quot;data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;🎲&lt;/text&gt;&lt;/svg&gt;&quot;
+    /&gt;
+    &lt;title&gt;Leaderboard - Seru Tapi Miskin&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .animate-slide-in-right {
+        animation: slideInRight 0.5s ease-out;
+      }
+      .animate-slide-out-right {
+        animation: slideOutRight 0.5s ease-in;
+      }
+      .animate-shake {
+        animation: shake 0.5s;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body
+    class=&quot;bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen&quot;
+  &gt;
+    &lt;!-- Navbar --&gt;
+    &lt;nav
+      class=&quot;fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md shadow-lg&quot;
+    &gt;
+      &lt;div
+        class=&quot;container mx-auto px-4 py-3 flex justify-between items-center&quot;
+      &gt;
+        &lt;div class=&quot;flex items-center space-x-4&quot;&gt;
+          &lt;a
+            href=&quot;index.html&quot;
+            class=&quot;text-2xl font-bold text-white drop-shadow-lg hover:text-purple-200 transition-colors duration-300&quot;
+          &gt;
+            Seru Tapi Miskin
+          &lt;/a&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;flex items-center space-x-6&quot;&gt;
+          &lt;div class=&quot;hidden md:flex space-x-4&quot;&gt;
+            &lt;a
+              href=&quot;quiz.html&quot;
+              class=&quot;text-white hover:text-purple-200 transition-colors duration-300 flex items-center space-x-2&quot;
+            &gt;
+              &lt;svg
+                xmlns=&quot;http://www.w3.org/2000/svg&quot;
+                class=&quot;h-5 w-5&quot;
+                fill=&quot;none&quot;
+                viewBox=&quot;0 0 24 24&quot;
+                stroke=&quot;currentColor&quot;
+              &gt;
+                &lt;path
+                  strokeLinecap=&quot;round&quot;
+                  strokeLinejoin=&quot;round&quot;
+                  strokeWidth=&quot;{2}&quot;
+                  d=&quot;M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;span&gt;Quiz&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;a
+              href=&quot;leaderboard.html&quot;
+              class=&quot;text-white hover:text-purple-200 transition-colors duration-300 flex items-center space-x-2&quot;
+            &gt;
+              &lt;svg
+                xmlns=&quot;http://www.w3.org/2000/svg&quot;
+                class=&quot;h-5 w-5&quot;
+                fill=&quot;none&quot;
+                viewBox=&quot;0 0 24 24&quot;
+                stroke=&quot;currentColor&quot;
+              &gt;
+                &lt;path
+                  strokeLinecap=&quot;round&quot;
+                  strokeLinejoin=&quot;round&quot;
+                  strokeWidth=&quot;{2}&quot;
+                  d=&quot;M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;span&gt;Peringkat&lt;/span&gt;
+            &lt;/a&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;flex items-center space-x-4&quot;&gt;
+            &lt;a
+              href=&quot;profile.html&quot;
+              class=&quot;text-white hover:text-purple-200 transition-all duration-300 transform hover:scale-110&quot;
+            &gt;
+              &lt;svg
+                xmlns=&quot;http://www.w3.org/2000/svg&quot;
+                class=&quot;h-6 w-6&quot;
+                fill=&quot;none&quot;
+                viewBox=&quot;0 0 24 24&quot;
+                stroke=&quot;currentColor&quot;
+              &gt;
+                &lt;path
+                  strokeLinecap=&quot;round&quot;
+                  strokeLinejoin=&quot;round&quot;
+                  strokeWidth=&quot;{2}&quot;
+                  d=&quot;M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/a&gt;
+            &lt;button
+              onclick=&quot;logout()&quot;
+              class=&quot;text-white hover:text-red-300 transition-all duration-300 transform hover:scale-110&quot;
+            &gt;
+              &lt;svg
+                xmlns=&quot;http://www.w3.org/2000/svg&quot;
+                class=&quot;h-6 w-6&quot;
+                fill=&quot;none&quot;
+                viewBox=&quot;0 0 24 24&quot;
+                stroke=&quot;currentColor&quot;
+              &gt;
+                &lt;path
+                  strokeLinecap=&quot;round&quot;
+                  strokeLinejoin=&quot;round&quot;
+                  strokeWidth=&quot;{2}&quot;
+                  d=&quot;M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+
+    &lt;!-- Konten Leaderboard --&gt;
+    &lt;div class=&quot;pt-20 container mx-auto px-4 py-8&quot;&gt;
+      &lt;div class=&quot;bg-white rounded-xl shadow-lg p-6&quot;&gt;
+        &lt;div class=&quot;flex justify-between items-center mb-6&quot;&gt;
+          &lt;h1 class=&quot;text-3xl font-bold text-center text-purple-600&quot;&gt;
+            Papan Peringkat
+          &lt;/h1&gt;
+          &lt;button
+            onclick=&quot;resetLeaderboard()&quot;
+            class=&quot;bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition&quot;
+          &gt;
+            Reset Peringkat
+          &lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div id=&quot;leaderboard-container&quot; class=&quot;space-y-4&quot;&gt;
+          &lt;!-- Peringkat akan dimuat di sini --&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+      // keren
+      let lastScrollTop = 0;
+      const navbar = document.querySelector(&quot;nav&quot;);
+
+      window.addEventListener(
+        &quot;scroll&quot;,
+        function () {
+          let currentScroll =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          if (currentScroll &gt; lastScrollTop) {
+            // Scroll down
+            navbar.classList.add(&quot;-translate-y-full&quot;);
+            navbar.classList.add(&quot;opacity-0&quot;);
+          } else {
+            // Scroll up
+            navbar.classList.remove(&quot;-translate-y-full&quot;);
+            navbar.classList.remove(&quot;opacity-0&quot;);
+          }
+
+          lastScrollTop = currentScroll &lt;= 0 ? 0 : currentScroll;
+        },
+        false
+      );
+
+      // Fungsi untuk menyimpan atau memperbarui skor
+      async function saveOrUpdateScore(score) {
+        try {
+          const username = await localforage.getItem(&quot;username&quot;);
+          const profileImage =
+            (await localforage.getItem(&quot;profileImage&quot;)) ||
+            &quot;https://via.placeholder.com/50?text=Profil&quot;;
+
+          // Ambil leaderboard yang sudah ada
+          let leaderboard = (await localforage.getItem(&quot;leaderboard&quot;)) || [];
+
+          // Cari index user yang sudah ada
+          const existingUserIndex = leaderboard.findIndex(
+            (entry) =&gt; entry.name === username
+          );
+
+          if (existingUserIndex !== -1) {
+            // Jika user sudah ada, update skornya
+            const existingUser = leaderboard[existingUserIndex];
+
+            leaderboard[existingUserIndex] = {
+              name: username,
+              score: score, // Skor quiz terakhir
+              totalScore: (existingUser.totalScore || 0) + score, // Akumulasi skor
+              date: new Date().toLocaleDateString(),
+              profileImage: profileImage,
+              quizCount: (existingUser.quizCount || 0) + 1, // Tambah jumlah quiz
+              bestScore: Math.max(existingUser.bestScore || 0, score), // Skor tertinggi
+            };
+          } else {
+            // Jika user belum ada, tambahkan entry baru
+            leaderboard.push({
+              name: username || &quot;Pemain Misterius&quot;,
+              score: score,
+              totalScore: score,
+              date: new Date().toLocaleDateString(),
+              profileImage: profileImage,
+              quizCount: 1,
+              bestScore: score,
+            });
+          }
+
+          // Urutkan berdasarkan total skor
+          leaderboard.sort((a, b) =&gt; b.totalScore - a.totalScore);
+
+          // Batasi entri leaderboard
+          leaderboard = leaderboard.slice(0, 10);
+
+          // Simpan kembali
+          await localforage.setItem(&quot;leaderboard&quot;, leaderboard);
+        } catch (error) {
+          console.error(&quot;Gagal menyimpan skor&quot;, error);
+        }
+      }
+
+      // Fungsi untuk menampilkan leaderboard dengan informasi lebih detail
+      async function displayLeaderboard() {
+        const leaderboardContainer = document.getElementById(
+          &quot;leaderboard-container&quot;
+        );
+
+        try {
+          const leaderboard = (await localforage.getItem(&quot;leaderboard&quot;)) || [];
+
+          if (leaderboard.length === 0) {
+            leaderboardContainer.innerHTML = `
+                &lt;div class=&quot;text-center text-gray-600&quot;&gt;
+                    Belum ada peringkat. Ayo main pertama!
+                &lt;/div&gt;
+            `;
+            return;
+          }
+
+          // Kelompokkan berdasarkan username untuk menghindari duplikasi
+          const uniqueLeaderboard = leaderboard.reduce((acc, entry) =&gt; {
+            const existingEntry = acc.find((e) =&gt; e.name === entry.name);
+
+            if (!existingEntry || entry.totalScore &gt; existingEntry.totalScore) {
+              // Tambahkan atau update entri
+              const index = acc.findIndex((e) =&gt; e.name === entry.name);
+              if (index !== -1) {
+                acc[index] = entry;
+              } else {
+                acc.push(entry);
+              }
+            }
+
+            return acc;
+          }, []);
+
+          // Urutkan ulang
+          uniqueLeaderboard.sort((a, b) =&gt; b.totalScore - a.totalScore);
+
+          const leaderboardHTML = uniqueLeaderboard
+            .slice(0, 10)
+            .map(
+              (entry, index) =&gt; `
+                &lt;div class=&quot;leaderboard-entry bg-white rounded-lg shadow-md p-4 mb-4 flex items-center&quot;&gt;
+                    &lt;img 
+                        src=&quot;${entry.profileImage}&quot; 
+                        class=&quot;profile-image w-16 h-16 rounded-full object-cover mr-4&quot;
+                    &gt;
+                    &lt;div class=&quot;user-info flex-grow&quot;&gt;
+                        &lt;span class=&quot;username block text-lg font-semibold text-purple-600&quot;&gt;${
+                          entry.name
+                        }&lt;/span&gt;
+                        &lt;span class=&quot;total-score block text-green-600&quot;&gt;Total Skor: ${
+                          entry.totalScore
+                        }&lt;/span&gt;
+                        &lt;span class=&quot;quiz-count block text-gray-600&quot;&gt;Quiz Dimainkan: ${
+                          entry.quizCount
+                        }&lt;/span&gt;
+                        &lt;span class=&quot;last-score block text-gray-600&quot;&gt;Skor Terakhir: ${
+                          entry.score
+                        }&lt;/span&gt;
+                        &lt;span class=&quot;date block text-sm text-gray-500&quot;&gt;Tanggal: ${
+                          entry.date
+                        }&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;ranking text-2xl font-bold text-purple-600&quot;&gt;
+                        #${index + 1}
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            `
+            )
+            .join(&quot;&quot;);
+
+          leaderboardContainer.innerHTML = leaderboardHTML;
+        } catch (error) {
+          console.error(&quot;Gagal memuat leaderboard&quot;, error);
+        }
+      }
+
+      // Muat leaderboard saat halaman dibuka
+      document.addEventListener(&quot;DOMContentLoaded&quot;, displayLeaderboard);
+
+      // Logout tetap sama
+      function logout() {
+        localforage.removeItem(&quot;username&quot;).then(() =&gt; {
+          window.location.href = &quot;index.html&quot;;
+        });
+      }
+
+      // Fungsi untuk reset leaderboard
+      async function resetLeaderboard() {
+        // Buat overlay dialog
+        const dialogOverlay = document.createElement(&quot;div&quot;);
+        dialogOverlay.classList.add(
+          &quot;fixed&quot;,
+          &quot;inset-0&quot;,
+          &quot;bg-black&quot;,
+          &quot;bg-opacity-50&quot;,
+          &quot;z-50&quot;,
+          &quot;flex&quot;,
+          &quot;items-center&quot;,
+          &quot;justify-center&quot;,
+          &quot;animate-fade-in&quot;
+        );
+
+        // Buat dialog container
+        const dialogContainer = document.createElement(&quot;div&quot;);
+        dialogContainer.classList.add(
+          &quot;bg-white&quot;,
+          &quot;rounded-xl&quot;,
+          &quot;shadow-2xl&quot;,
+          &quot;p-6&quot;,
+          &quot;w-96&quot;,
+          &quot;max-w-md&quot;,
+          &quot;animate-slide-up&quot;
+        );
+
+        // Konten dialog
+        dialogContainer.innerHTML = `
+        &lt;div class=&quot;text-center&quot;&gt;
+            &lt;div class=&quot;mb-4&quot;&gt;
+                &lt;h2 class=&quot;text-2xl font-bold text-purple-600&quot;&gt;Konfirmasi Reset&lt;/h2&gt;
+                &lt;p class=&quot;text-gray-600 mt-2&quot;&gt;Masukkan KEY untuk mereset peringkat&lt;/p&gt;
+            &lt;/div&gt;
+            
+            &lt;input 
+                type=&quot;password&quot; 
+                id=&quot;reset-key-input&quot; 
+                placeholder=&quot;Masukkan KEY&quot; 
+                class=&quot;w-full px-4 py-2 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4&quot;
+            &gt;
+            
+            &lt;div class=&quot;flex space-x-4&quot;&gt;
+                &lt;button id=&quot;cancel-reset&quot; class=&quot;w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition&quot;&gt;
+                    Batal
+                &lt;/button&gt;
+                &lt;button id=&quot;confirm-reset&quot; class=&quot;w-full bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition&quot;&gt;
+                    Reset
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    `;
+
+        // Tambahkan dialog ke overlay
+        dialogOverlay.appendChild(dialogContainer);
+        document.body.appendChild(dialogOverlay);
+
+        // Tambahkan animasi CSS
+        const style = document.createElement(&quot;style&quot;);
+        style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        .animate-slide-up { animation: slideUp 0.3s ease-out; }
+    `;
+        document.head.appendChild(style);
+
+        // Tangani tombol batal
+        dialogContainer
+          .querySelector(&quot;#cancel-reset&quot;)
+          .addEventListener(&quot;click&quot;, () =&gt; {
+            document.body.removeChild(dialogOverlay);
+          });
+
+        // Tangani tombol konfirmasi
+        dialogContainer
+          .querySelector(&quot;#confirm-reset&quot;)
+          .addEventListener(&quot;click&quot;, async () =&gt; {
+            const keyInput = dialogContainer.querySelector(&quot;#reset-key-input&quot;);
+
+            if (keyInput.value === &quot;adminarise&quot;) {
+              try {
+                // Hapus leaderboard dari local storage
+                await localforage.removeItem(&quot;leaderboard&quot;);
+
+                // Hapus total skor
+                await localforage.removeItem(&quot;totalScore&quot;);
+
+                // Refresh halaman leaderboard
+                displayLeaderboard();
+
+                // Tutup dialog
+                document.body.removeChild(dialogOverlay);
+
+                // Beri notifikasi sukses
+                showSuccessNotification(&quot;Peringkat berhasil direset!&quot;);
+              } catch (error) {
+                console.error(&quot;Gagal mereset leaderboard&quot;, error);
+                showErrorNotification(
+                  &quot;Terjadi kesalahan saat mereset peringkat.&quot;
+                );
+              }
+            } else {
+              keyInput.classList.add(&quot;border-red-500&quot;, &quot;animate-shake&quot;);
+              keyInput.addEventListener(
+                &quot;animationend&quot;,
+                () =&gt; {
+                  keyInput.classList.remove(&quot;border-red-500&quot;, &quot;animate-shake&quot;);
+                },
+                { once: true }
+              );
+            }
+          });
+      }
+
+      // Fungsi notifikasi sukses
+      function showSuccessNotification(message) {
+        const notification = document.createElement(&quot;div&quot;);
+        notification.classList.add(
+          &quot;fixed&quot;,
+          &quot;top-4&quot;,
+          &quot;right-4&quot;,
+          &quot;bg-green-500&quot;,
+          &quot;text-white&quot;,
+          &quot;px-6&quot;,
+          &quot;py-4&quot;,
+          &quot;rounded-xl&quot;,
+          &quot;shadow-lg&quot;,
+          &quot;z-50&quot;,
+          &quot;animate-slide-in-right&quot;
+        );
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() =&gt; {
+          notification.classList.add(&quot;animate-slide-out-right&quot;);
+          setTimeout(() =&gt; {
+            document.body.removeChild(notification);
+          }, 500);
+        }, 3000);
+      }
+
+      // Fungsi notifikasi error
+      function showErrorNotification(message) {
+        const notification = document.createElement(&quot;div&quot;);
+        notification.classList.add(
+          &quot;fixed&quot;,
+          &quot;top-4&quot;,
+          &quot;right-4&quot;,
+          &quot;bg-red-500&quot;,
+          &quot;text-white&quot;,
+          &quot;px-6&quot;,
+          &quot;py-4&quot;,
+          &quot;rounded-xl&quot;,
+          &quot;shadow-lg&quot;,
+          &quot;z-50&quot;,
+          &quot;animate-slide-in-right&quot;
+        );
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() =&gt; {
+          notification.classList.add(&quot;animate-slide-out-right&quot;);
+          setTimeout(() =&gt; {
+            document.body.removeChild(notification);
+          }, 500);
+        }, 3000);
+      }
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
