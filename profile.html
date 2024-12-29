@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>"
+    />
+    <title>Profil - Seru Tapi Miskin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+  </head>
+  <body
+    class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md shadow-lg"
+    >
+      <div
+        class="container mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <div class="flex items-center space-x-4">
+          <a
+            href="index.html"
+            class="text-2xl font-bold text-white drop-shadow-lg hover:text-purple-200 transition-colors duration-300"
+          >
+            Seru Tapi Miskin
+          </a>
+        </div>
+
+        <div class="flex items-center space-x-6">
+          <div class="hidden md:flex space-x-4">
+            <a
+              href="quiz.html"
+              class="text-white hover:text-purple-200 transition-colors duration-300 flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Quiz</span>
+            </a>
+            <a
+              href="leaderboard.html"
+              class="text-white hover:text-purple-200 transition-colors duration-300 flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+              <span>Peringkat</span>
+            </a>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <a
+              href="profile.html"
+              class="text-white hover:text-purple-200 transition-all duration-300 transform hover:scale-110"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </a>
+            <button
+              onclick="logout()"
+              class="text-white hover:text-red-300 transition-all duration-300 transform hover:scale-110"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="pt-20 container mx-auto px-4 py-8">
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="mb-6 flex flex-col items-center">
+          <div
+            class="w-32 h-32 rounded-full border-4 border-purple-300 mb-4 overflow-hidden"
+          >
+            <img
+              id="profile-image"
+              src=""
+              alt="Foto Profil"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <input
+            type="file"
+            id="profile-image-upload"
+            accept="image/*"
+            class="hidden"
+          />
+          <button
+            onclick="document.getElementById('profile-image-upload').click()"
+            class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+          >
+            Unggah Foto
+          </button>
+        </div>
+        <h1 class="text-2xl font-bold mb-4 text-purple-600">Profil Akun</h1>
+
+        <div class="mb-4">
+          <label class="block text-gray-700">Username</label>
+          <input
+            type="text"
+            id="username-display"
+            class="w-full p-2 border rounded"
+            readonly
+          />
+        </div>
+
+        <div class="space-y-4">
+          <button
+            onclick="exportProfile()"
+            class="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600"
+          >
+            Export Profil
+          </button>
+
+          <label class="block">
+            <span class="text-gray-700">Import Profil</span>
+            <input
+              type="file"
+              id="import-profile"
+              accept=".json"
+              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Fungsi kompresi gambar
+      async function compressImage(dataUrl, maxWidth = 300, maxHeight = 300) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+
+            // Sesuaikan ukuran
+            if (width > height) {
+              if (width > maxWidth) {
+                height *= maxWidth / width;
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width *= maxHeight / height;
+                height = maxHeight;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            resolve(canvas.toDataURL("image/jpeg", 0.7));
+          };
+          img.src = dataUrl;
+        });
+      }
+
+      // Untuk logout
+      function logout() {
+        localforage.removeItem("username").then(() => {
+          window.location.href = "index.html";
+        });
+      }
+
+      // Fungsi untuk menyimpan skor
+      async function saveScore(name, score) {
+        try {
+          let leaderboard = (await localforage.getItem("leaderboard")) || [];
+
+          // Ambil foto profil
+          const profileImage = await localforage.getItem("profileImage");
+
+          // Tambahkan skor baru
+          leaderboard.push({
+            name: name || "Pemain Misterius",
+            score: score,
+            totalScore: (await localforage.getItem("totalScore")) || score,
+            date: new Date().toLocaleDateString(),
+            profileImage:
+              profileImage || "https://via.placeholder.com/50?text=Profil",
+          });
+
+          // Urutkan dari skor tertinggi
+          leaderboard.sort((a, b) => b.totalScore - a.totalScore);
+
+          // Batasi 10 skor teratas
+          leaderboard = leaderboard.slice(0, 10);
+
+          // Simpan kembali
+          await localforage.setItem("leaderboard", leaderboard);
+        } catch (error) {
+          console.error("Gagal menyimpan skor", error);
+        }
+      }
+
+      // Fungsi untuk menampilkan leaderboard
+      async function displayLeaderboard() {
+        const leaderboardContainer = document.getElementById(
+          "leaderboard-container"
+        );
+
+        try {
+          const leaderboard = (await localforage.getItem("leaderboard")) || [];
+
+          if (leaderboard.length === 0) {
+            leaderboardContainer.innerHTML = `
+                      <div class="text-center text-gray-600">
+                          Belum ada peringkat. Ayo main pertama!
+                      </div>
+                  `;
+            return;
+          }
+
+          const leaderboardHTML = leaderboard
+            .map(
+              (entry, index) => `
+                      <div class="flex justify-between items-center bg-purple-100 p-4 rounded-lg">
+                          <div class="flex items-center space-x-4">
+                              <span class="font-bold text-purple-600">#${
+                                index + 1
+                              }</span>
+                              <div class="flex items-center space-x-4">
+                                  <img
+                                      src="${
+                                        entry.profileImage ||
+                                        "https://via.placeholder.com/50?text=Profil"
+                                      }"
+                                      alt="Foto Profil"
+                                      class="w-12 h-12 rounded-full object-cover"
+                                  />
+                                  <span>${entry.name}</span>
+                              </div>
+                          </div>
+                          <div class="flex items-center space-x-2">
+                              <span class="text-green-600 font-semibold">Total Skor: ${
+                                entry.totalScore
+                              }</span>
+                              <span class="text-gray-500 text-sm">${
+                                entry.date
+                              }</span>
+                          </div>
+                      </div>
+                  `
+            )
+            .join("");
+
+          leaderboardContainer.innerHTML = leaderboardHTML;
+        } catch (error) {
+          console.error("Gagal memuat leaderboard", error);
+        }
+      }
+
+      // Muat leaderboard saat halaman dibuka
+      displayLeaderboard();
+
+      // Tambahan untuk upload foto profil (jika di halaman profil)
+      if (document.getElementById("profile-image-upload")) {
+        document
+          .getElementById("profile-image-upload")
+          .addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validasi tipe file
+            if (!file.type.startsWith("image/")) {
+              alert("Harap pilih file gambar");
+              return;
+            }
+
+            // Batasi ukuran file (misalnya 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+              alert("Ukuran file terlalu besar. Maksimal 5MB");
+              return;
+            }
+
+            // Baca file sebagai Data URL
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+              const profileImage = document.getElementById("profile-image");
+
+              try {
+                // Kompres gambar
+                const compressedImage = await compressImage(e.target.result);
+
+                // Tampilkan gambar
+                profileImage.src = compressedImage;
+
+                // Simpan foto ke local storage
+                await localforage.setItem("profileImage", compressedImage);
+
+                // Ambil username pengguna saat ini
+                const currentUsername = await localforage.getItem("username");
+
+                // Update leaderboard hanya untuk username yang sesuai
+                let leaderboard =
+                  (await localforage.getItem("leaderboard")) || [];
+                leaderboard = leaderboard.map((entry) =>
+                  entry.name === currentUsername
+                    ? { ...entry, profileImage: compressedImage }
+                    : entry
+                );
+
+                await localforage.setItem("leaderboard", leaderboard);
+
+                // Refresh leaderboard
+                displayLeaderboard();
+              } catch (error) {
+                console.error("Gagal menyimpan foto profil", error);
+                alert("Gagal menyimpan foto profil");
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+      }
+
+      // Muat foto profil saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", async () => {
+        const profileImage = document.getElementById("profile-image");
+        const savedProfileImage = await localforage.getItem("profileImage");
+
+        if (savedProfileImage) {
+          profileImage.src = savedProfileImage;
+        } else {
+          // Foto default jika tidak ada
+          profileImage.src = "https://via.placeholder.com/150?text=Profil";
+        }
+
+        // Tampilkan username
+        const username = await localforage.getItem("username");
+        document.getElementById("username-display").value =
+          username || "Pengguna";
+      });
+
+      // Fungsi Export Profil
+      async function exportProfile() {
+        try {
+          // Ambil data yang ingin di-export
+          const profileData = {
+            username: await localforage.getItem("username"),
+            leaderboard: (await localforage.getItem("leaderboard")) || [],
+            profileImage: (await localforage.getItem("profileImage")) || null,
+          };
+
+          // Buat file JSON
+          const blob = new Blob([JSON.stringify(profileData, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+
+          // Buat link download
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `seru-tapi-miskin-profile-${profileData.username}.json`;
+          a.click();
+
+          // Bersihkan
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error("Gagal export profil", error);
+          alert("Gagal export profil");
+        }
+      }
+
+      // Fungsi Import Profil
+      document
+        .getElementById("import-profile")
+        .addEventListener("change", async (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          try {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+              try {
+                const profileData = JSON.parse(e.target.result);
+
+                // Validasi data
+                if (!profileData.username) {
+                  alert("File profil tidak valid");
+                  return;
+                }
+
+                // Simpan data
+                await localforage.setItem("username", profileData.username);
+
+                // Simpan leaderboard jika ada
+                if (profileData.leaderboard) {
+                  await localforage.setItem(
+                    "leaderboard",
+                    profileData.leaderboard
+                  );
+                }
+
+                // Simpan foto profil jika ada
+                if (profileData.profileImage) {
+                  await localforage.setItem(
+                    "profileImage",
+                    profileData.profileImage
+                  );
+                  document.getElementById("profile-image").src =
+                    profileData.profileImage;
+                }
+
+                // Refresh halaman
+                alert("Profil berhasil diimpor!");
+                window.location.reload();
+              } catch (parseError) {
+                console.error("Gagal parsing file", parseError);
+                alert("Gagal membaca file profil");
+              }
+            };
+            reader.readAsText(file);
+          } catch (error) {
+            console.error("Gagal import profil", error);
+            alert("Gagal import profil");
+          }
+        });
+
+      // Fungsi Logout
+      function logout() {
+        localforage.removeItem("username").then(() => {
+          window.location.href = "index.html";
+        });
+      }
+    </script>
+  </body>
+</html>

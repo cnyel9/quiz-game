@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>"
+    />
+    <title>Leaderboard - Seru Tapi Miskin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+    <style>
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      .animate-slide-in-right {
+        animation: slideInRight 0.5s ease-out;
+      }
+      .animate-slide-out-right {
+        animation: slideOutRight 0.5s ease-in;
+      }
+      .animate-shake {
+        animation: shake 0.5s;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md shadow-lg"
+    >
+      <div
+        class="container mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <div class="flex items-center space-x-4">
+          <a
+            href="index.html"
+            class="text-2xl font-bold text-white drop-shadow-lg hover:text-purple-200 transition-colors duration-300"
+          >
+            Seru Tapi Miskin
+          </a>
+        </div>
+
+        <div class="flex items-center space-x-6">
+          <div class="hidden md:flex space-x-4">
+            <a
+              href="quiz.html"
+              class="text-white hover:text-purple-200 transition-colors duration-300 flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Quiz</span>
+            </a>
+            <a
+              href="leaderboard.html"
+              class="text-white hover:text-purple-200 transition-colors duration-300 flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+              <span>Peringkat</span>
+            </a>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <a
+              href="profile.html"
+              class="text-white hover:text-purple-200 transition-all duration-300 transform hover:scale-110"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </a>
+            <button
+              onclick="logout()"
+              class="text-white hover:text-red-300 transition-all duration-300 transform hover:scale-110"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="{2}"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Konten Leaderboard -->
+    <div class="pt-20 container mx-auto px-4 py-8">
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-center text-purple-600">
+            Papan Peringkat
+          </h1>
+          <button
+            onclick="resetLeaderboard()"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+          >
+            Reset Peringkat
+          </button>
+        </div>
+
+        <div id="leaderboard-container" class="space-y-4">
+          <!-- Peringkat akan dimuat di sini -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // keren
+      let lastScrollTop = 0;
+      const navbar = document.querySelector("nav");
+
+      window.addEventListener(
+        "scroll",
+        function () {
+          let currentScroll =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          if (currentScroll > lastScrollTop) {
+            // Scroll down
+            navbar.classList.add("-translate-y-full");
+            navbar.classList.add("opacity-0");
+          } else {
+            // Scroll up
+            navbar.classList.remove("-translate-y-full");
+            navbar.classList.remove("opacity-0");
+          }
+
+          lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        },
+        false
+      );
+
+      // Fungsi untuk menyimpan atau memperbarui skor
+      async function saveOrUpdateScore(score) {
+        try {
+          const username = await localforage.getItem("username");
+          const profileImage =
+            (await localforage.getItem("profileImage")) ||
+            "https://via.placeholder.com/50?text=Profil";
+
+          // Ambil leaderboard yang sudah ada
+          let leaderboard = (await localforage.getItem("leaderboard")) || [];
+
+          // Cari index user yang sudah ada
+          const existingUserIndex = leaderboard.findIndex(
+            (entry) => entry.name === username
+          );
+
+          if (existingUserIndex !== -1) {
+            // Jika user sudah ada, update skornya
+            const existingUser = leaderboard[existingUserIndex];
+
+            leaderboard[existingUserIndex] = {
+              name: username,
+              score: score, // Skor quiz terakhir
+              totalScore: (existingUser.totalScore || 0) + score, // Akumulasi skor
+              date: new Date().toLocaleDateString(),
+              profileImage: profileImage,
+              quizCount: (existingUser.quizCount || 0) + 1, // Tambah jumlah quiz
+              bestScore: Math.max(existingUser.bestScore || 0, score), // Skor tertinggi
+            };
+          } else {
+            // Jika user belum ada, tambahkan entry baru
+            leaderboard.push({
+              name: username || "Pemain Misterius",
+              score: score,
+              totalScore: score,
+              date: new Date().toLocaleDateString(),
+              profileImage: profileImage,
+              quizCount: 1,
+              bestScore: score,
+            });
+          }
+
+          // Urutkan berdasarkan total skor
+          leaderboard.sort((a, b) => b.totalScore - a.totalScore);
+
+          // Batasi entri leaderboard
+          leaderboard = leaderboard.slice(0, 10);
+
+          // Simpan kembali
+          await localforage.setItem("leaderboard", leaderboard);
+        } catch (error) {
+          console.error("Gagal menyimpan skor", error);
+        }
+      }
+
+      // Fungsi untuk menampilkan leaderboard dengan informasi lebih detail
+      async function displayLeaderboard() {
+        const leaderboardContainer = document.getElementById(
+          "leaderboard-container"
+        );
+
+        try {
+          const leaderboard = (await localforage.getItem("leaderboard")) || [];
+
+          if (leaderboard.length === 0) {
+            leaderboardContainer.innerHTML = `
+                <div class="text-center text-gray-600">
+                    Belum ada peringkat. Ayo main pertama!
+                </div>
+            `;
+            return;
+          }
+
+          // Kelompokkan berdasarkan username untuk menghindari duplikasi
+          const uniqueLeaderboard = leaderboard.reduce((acc, entry) => {
+            const existingEntry = acc.find((e) => e.name === entry.name);
+
+            if (!existingEntry || entry.totalScore > existingEntry.totalScore) {
+              // Tambahkan atau update entri
+              const index = acc.findIndex((e) => e.name === entry.name);
+              if (index !== -1) {
+                acc[index] = entry;
+              } else {
+                acc.push(entry);
+              }
+            }
+
+            return acc;
+          }, []);
+
+          // Urutkan ulang
+          uniqueLeaderboard.sort((a, b) => b.totalScore - a.totalScore);
+
+          const leaderboardHTML = uniqueLeaderboard
+            .slice(0, 10)
+            .map(
+              (entry, index) => `
+                <div class="leaderboard-entry bg-white rounded-lg shadow-md p-4 mb-4 flex items-center">
+                    <img 
+                        src="${entry.profileImage}" 
+                        class="profile-image w-16 h-16 rounded-full object-cover mr-4"
+                    >
+                    <div class="user-info flex-grow">
+                        <span class="username block text-lg font-semibold text-purple-600">${
+                          entry.name
+                        }</span>
+                        <span class="total-score block text-green-600">Total Skor: ${
+                          entry.totalScore
+                        }</span>
+                        <span class="quiz-count block text-gray-600">Quiz Dimainkan: ${
+                          entry.quizCount
+                        }</span>
+                        <span class="last-score block text-gray-600">Skor Terakhir: ${
+                          entry.score
+                        }</span>
+                        <span class="date block text-sm text-gray-500">Tanggal: ${
+                          entry.date
+                        }</span>
+                    </div>
+                    <div class="ranking text-2xl font-bold text-purple-600">
+                        #${index + 1}
+                    </div>
+                </div>
+            `
+            )
+            .join("");
+
+          leaderboardContainer.innerHTML = leaderboardHTML;
+        } catch (error) {
+          console.error("Gagal memuat leaderboard", error);
+        }
+      }
+
+      // Muat leaderboard saat halaman dibuka
+      document.addEventListener("DOMContentLoaded", displayLeaderboard);
+
+      // Logout tetap sama
+      function logout() {
+        localforage.removeItem("username").then(() => {
+          window.location.href = "index.html";
+        });
+      }
+
+      // Fungsi untuk reset leaderboard
+      async function resetLeaderboard() {
+        // Buat overlay dialog
+        const dialogOverlay = document.createElement("div");
+        dialogOverlay.classList.add(
+          "fixed",
+          "inset-0",
+          "bg-black",
+          "bg-opacity-50",
+          "z-50",
+          "flex",
+          "items-center",
+          "justify-center",
+          "animate-fade-in"
+        );
+
+        // Buat dialog container
+        const dialogContainer = document.createElement("div");
+        dialogContainer.classList.add(
+          "bg-white",
+          "rounded-xl",
+          "shadow-2xl",
+          "p-6",
+          "w-96",
+          "max-w-md",
+          "animate-slide-up"
+        );
+
+        // Konten dialog
+        dialogContainer.innerHTML = `
+        <div class="text-center">
+            <div class="mb-4">
+                <h2 class="text-2xl font-bold text-purple-600">Konfirmasi Reset</h2>
+                <p class="text-gray-600 mt-2">Masukkan KEY untuk mereset peringkat</p>
+            </div>
+            
+            <input 
+                type="password" 
+                id="reset-key-input" 
+                placeholder="Masukkan KEY" 
+                class="w-full px-4 py-2 border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
+            >
+            
+            <div class="flex space-x-4">
+                <button id="cancel-reset" class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition">
+                    Batal
+                </button>
+                <button id="confirm-reset" class="w-full bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition">
+                    Reset
+                </button>
+            </div>
+        </div>
+    `;
+
+        // Tambahkan dialog ke overlay
+        dialogOverlay.appendChild(dialogContainer);
+        document.body.appendChild(dialogOverlay);
+
+        // Tambahkan animasi CSS
+        const style = document.createElement("style");
+        style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        .animate-slide-up { animation: slideUp 0.3s ease-out; }
+    `;
+        document.head.appendChild(style);
+
+        // Tangani tombol batal
+        dialogContainer
+          .querySelector("#cancel-reset")
+          .addEventListener("click", () => {
+            document.body.removeChild(dialogOverlay);
+          });
+
+        // Tangani tombol konfirmasi
+        dialogContainer
+          .querySelector("#confirm-reset")
+          .addEventListener("click", async () => {
+            const keyInput = dialogContainer.querySelector("#reset-key-input");
+
+            if (keyInput.value === "adminarise") {
+              try {
+                // Hapus leaderboard dari local storage
+                await localforage.removeItem("leaderboard");
+
+                // Hapus total skor
+                await localforage.removeItem("totalScore");
+
+                // Refresh halaman leaderboard
+                displayLeaderboard();
+
+                // Tutup dialog
+                document.body.removeChild(dialogOverlay);
+
+                // Beri notifikasi sukses
+                showSuccessNotification("Peringkat berhasil direset!");
+              } catch (error) {
+                console.error("Gagal mereset leaderboard", error);
+                showErrorNotification(
+                  "Terjadi kesalahan saat mereset peringkat."
+                );
+              }
+            } else {
+              keyInput.classList.add("border-red-500", "animate-shake");
+              keyInput.addEventListener(
+                "animationend",
+                () => {
+                  keyInput.classList.remove("border-red-500", "animate-shake");
+                },
+                { once: true }
+              );
+            }
+          });
+      }
+
+      // Fungsi notifikasi sukses
+      function showSuccessNotification(message) {
+        const notification = document.createElement("div");
+        notification.classList.add(
+          "fixed",
+          "top-4",
+          "right-4",
+          "bg-green-500",
+          "text-white",
+          "px-6",
+          "py-4",
+          "rounded-xl",
+          "shadow-lg",
+          "z-50",
+          "animate-slide-in-right"
+        );
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.classList.add("animate-slide-out-right");
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 500);
+        }, 3000);
+      }
+
+      // Fungsi notifikasi error
+      function showErrorNotification(message) {
+        const notification = document.createElement("div");
+        notification.classList.add(
+          "fixed",
+          "top-4",
+          "right-4",
+          "bg-red-500",
+          "text-white",
+          "px-6",
+          "py-4",
+          "rounded-xl",
+          "shadow-lg",
+          "z-50",
+          "animate-slide-in-right"
+        );
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.classList.add("animate-slide-out-right");
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 500);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
